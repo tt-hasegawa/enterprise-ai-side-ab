@@ -67,7 +67,7 @@ const FacilityDetail = {
         async fetchAvailability() {
             if (!this.date || !this.facility) return;
             try {
-                const result = await apiFetch(\`/api/facilities/\${this.facility.id}/availability?date=\${this.date}\`);
+                const result = await apiFetch('/api/facilities/' + this.facility.id + '/availability?date=' + this.date);
                 this.slots = result.slots || [];
             } catch (e) {
                 console.error(e);

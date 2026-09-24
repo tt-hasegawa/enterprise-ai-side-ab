@@ -54,10 +54,11 @@ const FacilityDetail = {
         },
         async fetchFacility() {
             try {
-                const id = new URLSearchParams(window.location.search).get('id');
+                const id = this.$root.getParam('id');
                 if (!id) { this.loading = false; return; }
                 const lang = i18n.global.locale;
                 this.facility = await apiFetch('/api/facilities/' + id + '?lang=' + lang);
+                await this.fetchAvailability();
             } catch (e) {
                 console.error(e);
             } finally {
@@ -67,7 +68,7 @@ const FacilityDetail = {
         async fetchAvailability() {
             if (!this.date || !this.facility) return;
             try {
-                const result = await apiFetch(\`/api/facilities/\${this.facility.id}/availability?date=\${this.date}\`);
+                const result = await apiFetch('/api/facilities/' + this.facility.id + '/availability?date=' + this.date);
                 this.slots = result.slots || [];
             } catch (e) {
                 console.error(e);

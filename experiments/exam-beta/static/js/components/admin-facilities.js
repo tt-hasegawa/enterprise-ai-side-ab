@@ -1,7 +1,13 @@
 const AdminFacilities = {
     template: `
         <div>
-            <h2 class="mb-4">{{ $t('admin.facilities') }}</h2>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>{{ $t('admin.facilities') }}</h2>
+                <div class="btn-group">
+                    <button class="btn btn-outline-primary active">{{ $t('admin.facilities') }}</button>
+                    <button class="btn btn-outline-primary" @click="$root.navigate('/admin/reservations')">{{ $t('admin.reservations') }}</button>
+                </div>
+            </div>
             <div v-if="!store.user || store.user.role !== 'staff'" class="alert alert-danger">
                 {{ $t('common.error') }}
             </div>
@@ -45,11 +51,11 @@ const AdminFacilities = {
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>{{ $t('facility.type') }}</th>
+                            <th>施設名</th>
                             <th>{{ $t('facility.type') }}</th>
                             <th>{{ $t('facility.capacity') }}</th>
                             <th>{{ $t('facility.price') }}</th>
-                            <th>{{ $t('admin.edit') }}</th>
+                            <th>{{ $t('admin.delete') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -107,5 +113,10 @@ const AdminFacilities = {
     },
     mounted() {
         this.fetchFacilities();
+    },
+    watch: {
+        '$root.currentRoute'() {
+            this.fetchFacilities();
+        }
     }
 };

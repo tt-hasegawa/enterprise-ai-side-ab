@@ -23,8 +23,14 @@
                         <li class="nav-item" v-if="store.user">
                             <a class="nav-link" href="#" @click="navigate('/reservations')">{{ $t('nav.reservations') }}</a>
                         </li>
-                        <li class="nav-item" v-if="store.user && store.user.role === 'staff'">
-                            <a class="nav-link" href="#" @click="navigate('/admin/facilities')">{{ $t('nav.admin') }}</a>
+                        <li class="nav-item dropdown" v-if="store.user && store.user.role === 'staff'">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                {{ $t('nav.admin') }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" @click="navigate('/admin/facilities')">{{ $t('admin.facilities') }}</a></li>
+                                <li><a class="dropdown-item" href="#" @click="navigate('/admin/reservations')">{{ $t('admin.reservations') }}</a></li>
+                            </ul>
                         </li>
                     </ul>
                     <ul class="navbar-nav">

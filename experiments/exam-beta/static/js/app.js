@@ -24,8 +24,7 @@ const app = Vue.createApp({
                 '/admin/reservations': 'admin-reservations'
             };
             const path = this.currentRoute.split('?')[0];
-            const basePath = '/' + (path.split('/')[1] || '');
-            return routes[basePath] || 'facility-list';
+            return routes[path] || 'facility-list';
         },
         currentLangLabel() {
             const labels = { ja: '日本語', en: 'English', zh: '中文' };
@@ -33,6 +32,11 @@ const app = Vue.createApp({
         }
     },
     methods: {
+        getParam(name) {
+            const queryString = this.currentRoute.includes('?') ? this.currentRoute.split('?')[1] : '';
+            const params = new URLSearchParams(queryString);
+            return params.get(name) || new URLSearchParams(window.location.search).get(name);
+        },
         navigate(path) {
             this.currentRoute = path;
             window.scrollTo(0, 0);

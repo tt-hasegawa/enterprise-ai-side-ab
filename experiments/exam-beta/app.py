@@ -29,6 +29,10 @@ def create_app():
     app.register_blueprint(reservations_bp)
     app.register_blueprint(payments_bp)
 
+    @app.route('/')
+    def index():
+        return send_from_directory(app.static_folder, 'index.html')
+
     with app.app_context():
         db.create_all()
         _seed_data()
@@ -37,7 +41,32 @@ def create_app():
 
 
 def _seed_data():
-    from models import Facility
+    from models import Facility, User
+    from routes.auth import bcrypt
+
+    if User.query.filter_by(username='admin').first() is None:
+        admin_user = User(
+            username='admin',
+            email='admin@example.com',
+            password_hash=bcrypt.generate_password_hash('admin123').decode('utf-8'),
+            display_name='自治体職員（管理者）',
+            role='staff',
+            language='ja'
+        )
+        db.session.add(admin_user)
+
+    if User.query.filter_by(username='user').first() is None:
+        citizen_user = User(
+            username='user',
+            email='user@example.com',
+            password_hash=bcrypt.generate_password_hash('user123').decode('utf-8'),
+            display_name='テスト市民',
+            role='citizen',
+            language='ja'
+        )
+        db.session.add(citizen_user)
+
+    db.session.commit()
 
     if Facility.query.first() is not None:
         return
@@ -106,4 +135,5 @@ def _seed_data():
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5001))
+    app.run(debug=True, host='0.0.0.0', port=port)

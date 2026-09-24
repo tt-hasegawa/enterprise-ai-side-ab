@@ -65,7 +65,7 @@ const PaymentPage = {
         },
         async fetchReservation() {
             try {
-                const id = new URLSearchParams(window.location.search).get('id');
+                const id = this.$root.getParam('id');
                 if (!id) return;
                 this.reservationId = id;
                 const r = await apiFetch('/api/reservations/' + id);
@@ -83,5 +83,10 @@ const PaymentPage = {
     },
     mounted() {
         this.fetchReservation();
+    },
+    watch: {
+        '$root.currentRoute'() {
+            this.fetchReservation();
+        }
     }
 };

@@ -74,7 +74,7 @@ const ReservationForm = {
     methods: {
         async fetchFacility() {
             try {
-                const id = new URLSearchParams(window.location.search).get('id');
+                const id = this.$root.getParam('id');
                 if (!id) return;
                 const lang = i18n.global.locale;
                 this.facility = await apiFetch('/api/facilities/' + id + '?lang=' + lang);
@@ -102,5 +102,10 @@ const ReservationForm = {
     },
     mounted() {
         this.fetchFacility();
+    },
+    watch: {
+        '$root.currentRoute'() {
+            this.fetchFacility();
+        }
     }
 };

@@ -1,7 +1,13 @@
 const AdminReservations = {
     template: `
         <div>
-            <h2 class="mb-4">{{ $t('admin.reservations') }}</h2>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>{{ $t('admin.reservations') }}</h2>
+                <div class="btn-group">
+                    <button class="btn btn-outline-primary" @click="$root.navigate('/admin/facilities')">{{ $t('admin.facilities') }}</button>
+                    <button class="btn btn-outline-primary active">{{ $t('admin.reservations') }}</button>
+                </div>
+            </div>
             <div v-if="!store.user || store.user.role !== 'staff'" class="alert alert-danger">
                 {{ $t('common.error') }}
             </div>
@@ -17,7 +23,7 @@ const AdminReservations = {
                         <tr>
                             <th>ID</th>
                             <th>{{ $t('auth.username') }}</th>
-                            <th>{{ $t('facility.type') }}</th>
+                            <th>施設名</th>
                             <th>{{ $t('reservation.date') }}</th>
                             <th>{{ $t('reservation.start') }}</th>
                             <th>{{ $t('reservation.end') }}</th>
@@ -55,6 +61,7 @@ const AdminReservations = {
             return labels[status] || status;
         },
         async fetchReservations() {
+            this.loading = true;
             try {
                 const result = await apiFetch('/api/reservations');
                 this.reservations = result.items;
@@ -64,5 +71,10 @@ const AdminReservations = {
     },
     mounted() {
         this.fetchReservations();
+    },
+    watch: {
+        '$root.currentRoute'() {
+            this.fetchReservations();
+        }
     }
 };
